@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Movielous</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="error">Ooops there is no connection, go to the favorite page?</string>
+    <string name="popular">Most Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="sortmenu">Sort By</string>
+    <string name="refresh">Refresh</string>
+    <string name="next_page">Next Page</string>
+    <string name="prev_page">Prev Page</string>
+    <string name="release">Release date</string>
+    <string name="other_review">See all review</string>
+    <string name="other_video">See all video</string>
+    <string name="content_authority">com.example.android.movielous</string>
+    <string name="menu_favorite">My Favorite</string>
+    <string name="go_to_favorite">Go to favorite</string>
+
+</resources>
