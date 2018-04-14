@@ -1,6 +1,5 @@
-package com.example.android.movielous.Movies;
+package com.example.android.movielous.ui.movies;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,23 +15,23 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.movielous.DetailMovie;
 import com.example.android.movielous.FavoriteActivity;
 import com.example.android.movielous.Models.MoviePojo;
 import com.example.android.movielous.Models.ResultPojo;
-import com.example.android.movielous.MovieAdapter;
 import com.example.android.movielous.R;
+import com.example.android.movielous.ui.detailMovie.DetailMovieActivity;
 import com.facebook.stetho.Stetho;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class MoviesActivity extends AppCompatActivity
-        implements MovieAdapter.MovieAdapterOnClickHandler, MoviesContract.View {
+        implements MoviesAdapter.MovieAdapterOnClickHandler, com.example.android.movielous.ui.movies.MoviesContract.View {
 
-    private MoviesContract.Presenter mPresenter;
-    private MoviesPresenter mMoviesPresenter;
+    private com.example.android.movielous.ui.movies.MoviesContract.Presenter mPresenter;
+    private com.example.android.movielous.ui.movies.MoviesPresenter mMoviesPresenter;
     private RecyclerView mRecycleView;
-    private MovieAdapter mMovieAdapter;
+    private MoviesAdapter mMoviesAdapter;
     private ProgressBar mLoadingPB;
     private TextView mErrorMessage, mSortByTitle;
     private Button  mGoToFavorite;
@@ -65,17 +64,21 @@ public class MoviesActivity extends AppCompatActivity
         mSortByTitle = (TextView)findViewById(R.id.tv_short_by_title);
         mGoToFavorite = (Button)findViewById(R.id.go_to_favorite);
 
-        mMoviesPresenter = new MoviesPresenter(this);
+        mMoviesPresenter = new com.example.android.movielous.ui.movies.MoviesPresenter(this);
 
 
         int noColumn = getNoOfColumn();
         final GridLayoutManager layoutManager = new GridLayoutManager(this,noColumn);
         mRecycleView.setLayoutManager(layoutManager);
         mRecycleView.setHasFixedSize(true);
-        mMovieAdapter = new MovieAdapter(this);
-        mRecycleView.setAdapter(mMovieAdapter);
+        mMoviesAdapter = new MoviesAdapter(this);
+        mRecycleView.setAdapter(mMoviesAdapter);
         mSortByTitle.setText(getResources().getString(R.string.popular));
 
+
+        /**
+         * Listener for endless scroll
+         */
         mRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -113,6 +116,9 @@ public class MoviesActivity extends AppCompatActivity
         mPresenter.loadMovies(sortBy,true, page);
     }
 
+    /**
+     * get number of gridview column depends on the screen size.
+     */
     private int getNoOfColumn(){
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
@@ -123,16 +129,29 @@ public class MoviesActivity extends AppCompatActivity
         return noOfColumn;
     }
 
+    /**
+     * Click Handler for favorite Button(appear if no internet)
+     */
     public void goToFavorite(View view){
+        mPresenter.openFavoriteMovie();
+    }
+
+    @Override
+    public void showFavoriteMovieUi() {
         Intent intent = new Intent(this, FavoriteActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onClick(ResultPojo movie) {
-        Context context = this;
-        Intent intent = new Intent(context,DetailMovie.class);
-       intent.putExtra("Movie", movie);
+        mPresenter.openMovieDetail(movie);
+
+    }
+
+    @Override
+    public void showDetailMovieUi(ResultPojo movie) {
+        Intent intent = new Intent(this,DetailMovieActivity.class);
+        intent.putExtra("Movie", movie);
         startActivity(intent);
     }
 
@@ -170,8 +189,7 @@ public class MoviesActivity extends AppCompatActivity
                 mPresenter.loadMovies(sortBy,true, page);
                 return true;
             case R.id.menu_favorite:
-                Intent intent = new Intent(this, FavoriteActivity.class);
-                startActivity(intent);
+                mPresenter.openFavoriteMovie();
                 return true;
             default :
                 super.onOptionsItemSelected(item);
@@ -195,12 +213,12 @@ public class MoviesActivity extends AppCompatActivity
 
         mRecycleView.setVisibility(View.VISIBLE);
 
-        mMovieAdapter.setmMovieData(movies);
+        mMoviesAdapter.setmMovieData(movies);
     }
 
     @Override
     public void showMoreMovies(MoviePojo movies) {
-        mMovieAdapter.addMovieData(movies);
+        mMoviesAdapter.addMovieData(movies);
     }
 
     @Override
@@ -216,8 +234,10 @@ public class MoviesActivity extends AppCompatActivity
         mRecycleView.setVisibility(View.INVISIBLE);
     }
 
+
+
     @Override
-    public void setPresenter(MoviesContract.Presenter presenter) {
+    public void setPresenter(com.example.android.movielous.ui.movies.MoviesContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 }

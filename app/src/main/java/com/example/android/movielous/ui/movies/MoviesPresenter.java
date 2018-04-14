@@ -1,9 +1,10 @@
-package com.example.android.movielous.Movies;
+package com.example.android.movielous.ui.movies;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.movielous.Models.MoviePojo;
+import com.example.android.movielous.Models.ResultPojo;
 import com.example.android.movielous.Rest.ApiClient;
 import com.example.android.movielous.Rest.ApiInterface;
 
@@ -14,12 +15,12 @@ import retrofit2.Response;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
-public class MoviesPresenter implements MoviesContract.Presenter {
+public class MoviesPresenter implements com.example.android.movielous.ui.movies.MoviesContract.Presenter {
 
-    private final MoviesContract.View mMoviesView;
+    private final com.example.android.movielous.ui.movies.MoviesContract.View mMoviesView;
 
 
-    public MoviesPresenter(@NonNull MoviesContract.View moviesView){
+    public MoviesPresenter(@NonNull com.example.android.movielous.ui.movies.MoviesContract.View moviesView){
         mMoviesView = checkNotNull(moviesView, "moviesView cannot be null!");
 
         mMoviesView.setPresenter(this);
@@ -77,5 +78,15 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 Log.e("MoviesActivity error : ", t.toString());
             }
         });
+    }
+
+    @Override
+    public void openMovieDetail(ResultPojo movie) {
+        mMoviesView.showDetailMovieUi(movie);
+    }
+
+    @Override
+    public void openFavoriteMovie() {
+
     }
 }

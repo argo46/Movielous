@@ -1,4 +1,4 @@
-package com.example.android.movielous;
+package com.example.android.movielous.ui.detailMovie;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.example.android.movielous.Models.MovieReview;
 import com.example.android.movielous.Models.MovieVideo;
 import com.example.android.movielous.Models.ResultPojo;
+import com.example.android.movielous.MoreReview;
+import com.example.android.movielous.R;
 import com.example.android.movielous.Utils.NetworkUtils;
 import com.example.android.movielous.Utils.TheMovieDBJsonUtils;
 import com.example.android.movielous.data.MovieContract;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DetailMovie extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<List>{
+public class DetailMovieActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<List>{
 
     ProgressBar mLoading;
     TextView mTitleAndRelease, mRates, mRelease, mReviewerName, mReview, mOtherReview;
@@ -82,7 +84,7 @@ public class DetailMovie extends AppCompatActivity  implements LoaderManager.Loa
         mDescription.setText(movie.getOverview());
         mRelease.setText(getResources().getString(R.string.release).concat(" : ").concat(movie.getReleaseDate()));
         URL imagePathUrl = NetworkUtils.buildImagePathUrl(movie.getBackdropPath(),"w500");
-        Picasso.with(DetailMovie.this).load(imagePathUrl.toString()).into(mBackdrop);
+        Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mBackdrop);
 
         getSupportLoaderManager().initLoader(23, null, this);
         checkFavourite(Integer.toString(movie.getId()));
@@ -90,7 +92,7 @@ public class DetailMovie extends AppCompatActivity  implements LoaderManager.Loa
 
     }
 
-    private void youtubeVideo(String key){
+    public void youtubeVideo(String key){
         Uri ytUrl = NetworkUtils.buildYoutubeVideoUri(key);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(ytUrl);
@@ -98,7 +100,7 @@ public class DetailMovie extends AppCompatActivity  implements LoaderManager.Loa
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            Log.d(DetailMovie.class.getSimpleName(), "Couldn't call " + ytUrl.toString() + ", no receiving apps installed!");
+            Log.d(DetailMovieActivity.class.getSimpleName(), "Couldn't call " + ytUrl.toString() + ", no receiving apps installed!");
         }
     }
 
@@ -132,11 +134,11 @@ public class DetailMovie extends AppCompatActivity  implements LoaderManager.Loa
                     List dataMovie = new ArrayList();
 
                     List<MovieReview> simpleJsonMovieReview = new ArrayList();
-                    simpleJsonMovieReview = TheMovieDBJsonUtils.getSimpleReviewFromJson(DetailMovie.this,JSONMovieDataResponse);
+                    simpleJsonMovieReview = TheMovieDBJsonUtils.getSimpleReviewFromJson(DetailMovieActivity.this,JSONMovieDataResponse);
                     dataMovie.add(simpleJsonMovieReview);
 
                     List<MovieVideo> simpleJsonMovieVideo = new ArrayList();
-                    simpleJsonMovieVideo = TheMovieDBJsonUtils.getSimpleVideoFromJson(DetailMovie.this, JSONMovieVideoResponse);
+                    simpleJsonMovieVideo = TheMovieDBJsonUtils.getSimpleVideoFromJson(DetailMovieActivity.this, JSONMovieVideoResponse);
                     dataMovie.add(simpleJsonMovieVideo);
                     return dataMovie;
                 }
@@ -179,7 +181,7 @@ public class DetailMovie extends AppCompatActivity  implements LoaderManager.Loa
                 if (video.getSite().equals("YouTube")){
                     final String key = video.getKey();
                     URL imagePathUrl = NetworkUtils.buildYoutubeTumbnailVideoUrl(key);
-                    Picasso.with(DetailMovie.this).load(imagePathUrl.toString()).into(mVideo1);
+                    Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mVideo1);
 
                     mVideo1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -257,6 +259,8 @@ public class DetailMovie extends AppCompatActivity  implements LoaderManager.Loa
         intent.putParcelableArrayListExtra("Reviews",listReview);
         startActivity(intent);
     }
+
+
 
 //    public void goToMoreVideo(View view) {
 //        //not implemented yet, sorry

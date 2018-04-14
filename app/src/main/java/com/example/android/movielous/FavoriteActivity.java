@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 
 import com.example.android.movielous.Models.ResultPojo;
 import com.example.android.movielous.data.MovieContract;
+import com.example.android.movielous.ui.detailMovie.DetailMovieActivity;
 
 public class FavoriteActivity extends AppCompatActivity
         implements FavoriteMovieAdapter.FavoriteAdapterOnClickHandler,
@@ -151,7 +152,7 @@ public class FavoriteActivity extends AppCompatActivity
             movie.setVoteAverage(Float.parseFloat(cursor.getString(INDEX_COLUMN_RATE)));
         }
         Context context = this;
-        Intent intent = new Intent(context,DetailMovie.class);
+        Intent intent = new Intent(context,DetailMovieActivity.class);
         intent.putExtra("Movie", movie);
         startActivity(intent);
     }

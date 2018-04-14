@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.movielous.DetailMovie">
+    tools:context="com.example.android.movielous.ui.detailMovie.DetailMovieActivity">
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -237,7 +237,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/like_button_off"
-            android:onClick="addTofavourite"/>
+            android:onClick="addTofavourite" />
 
 
     </LinearLayout>

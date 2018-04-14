@@ -1,4 +1,4 @@
-package com.example.android.movielous;
+package com.example.android.movielous.ui.movies;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.android.movielous.Models.MoviePojo;
 import com.example.android.movielous.Models.ResultPojo;
+import com.example.android.movielous.R;
 import com.example.android.movielous.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by user on 7/9/2017.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieAdapterViewHolder>{
 
     MoviePojo respon= new MoviePojo();
     List<ResultPojo> movies = new ArrayList();
@@ -31,7 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
 
-    public MovieAdapter(MovieAdapterOnClickHandler clickHandler){
+    public MoviesAdapter(MovieAdapterOnClickHandler clickHandler){
         mClickHandler = clickHandler;
     }
 
