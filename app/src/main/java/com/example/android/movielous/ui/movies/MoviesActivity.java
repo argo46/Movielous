@@ -26,10 +26,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class MoviesActivity extends AppCompatActivity
-        implements MoviesAdapter.MovieAdapterOnClickHandler, com.example.android.movielous.ui.movies.MoviesContract.View {
+        implements MoviesAdapter.MovieAdapterOnClickHandler, MoviesContract.View {
 
-    private com.example.android.movielous.ui.movies.MoviesContract.Presenter mPresenter;
-    private com.example.android.movielous.ui.movies.MoviesPresenter mMoviesPresenter;
+    private MoviesContract.Presenter mPresenter;
+    private MoviesPresenter mMoviesPresenter;
     private RecyclerView mRecycleView;
     private MoviesAdapter mMoviesAdapter;
     private ProgressBar mLoadingPB;
@@ -64,7 +64,7 @@ public class MoviesActivity extends AppCompatActivity
         mSortByTitle = (TextView)findViewById(R.id.tv_short_by_title);
         mGoToFavorite = (Button)findViewById(R.id.go_to_favorite);
 
-        mMoviesPresenter = new com.example.android.movielous.ui.movies.MoviesPresenter(this);
+        mMoviesPresenter = new MoviesPresenter(this);
 
 
         int noColumn = getNoOfColumn();
@@ -142,10 +142,13 @@ public class MoviesActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    /**
+     * Click Handler for recycler view item.
+     * @param movie
+     */
     @Override
     public void onClick(ResultPojo movie) {
         mPresenter.openMovieDetail(movie);
-
     }
 
     @Override

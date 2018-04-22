@@ -31,17 +31,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public class DetailMovieActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<List>{
 
-    ProgressBar mLoading;
-    TextView mTitleAndRelease, mRates, mRelease, mReviewerName, mReview, mOtherReview;
-    TextView mDescription;
-    ImageView mBackdrop, mLikeButton;
-    ImageButton mVideo1;
-    ResultPojo movie;
-    ArrayList<MovieReview> listReview;
-    ArrayList<MovieVideo> listVideo;
+public class DetailMovieActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<List>, DetailMovieContract.View{
+
+    private DetailMovieContract.Presenter mPresenter;
+    private DetailMoviePresenter mDetailMoviePresenter;
+    private ProgressBar mLoading;
+    private TextView mTitleAndRelease, mRates, mRelease, mReviewerName, mReview, mOtherReview;
+    private TextView mDescription;
+    private ImageView mBackdrop, mLikeButton;
+    private ImageButton mVideo1;
+    private ResultPojo movie;
+    private ArrayList<MovieReview> listReview;
+    private ArrayList<MovieVideo> listVideo;
     public static final String[] MOVIE_DETAIL_PROJECTION = {
             MovieContract.MovieEntry.COLUMN_TITLE,
             MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE,
@@ -69,6 +74,7 @@ public class DetailMovieActivity extends AppCompatActivity  implements LoaderMan
         mOtherReview = (TextView)findViewById(R.id.other_review);
 
 
+        mDetailMoviePresenter = new DetailMoviePresenter(this);
 
         Intent intentFromParent = getIntent();
         if (intentFromParent != null){
@@ -78,13 +84,8 @@ public class DetailMovieActivity extends AppCompatActivity  implements LoaderMan
         }
 
 
-        String year = movie.getReleaseDate().substring(0,4);
-        mTitleAndRelease.setText(movie.getOriginalTitle().concat(" (").concat(year).concat(")"));
-        mRates.setText(Float.toString(movie.getVoteAverage()));
-        mDescription.setText(movie.getOverview());
-        mRelease.setText(getResources().getString(R.string.release).concat(" : ").concat(movie.getReleaseDate()));
-        URL imagePathUrl = NetworkUtils.buildImagePathUrl(movie.getBackdropPath(),"w500");
-        Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mBackdrop);
+        showMovieUi(movie);
+
 
         getSupportLoaderManager().initLoader(23, null, this);
         checkFavourite(Integer.toString(movie.getId()));
@@ -234,20 +235,12 @@ public class DetailMovieActivity extends AppCompatActivity  implements LoaderMan
         Cursor cursor = this.getContentResolver().query(uri, MOVIE_DETAIL_PROJECTION, null, null, null);
         if (cursor.getCount()==0){
             mLikeButton.setImageResource(R.drawable.like_button_off);
-            mLikeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    addTofavourite(movie);
-                }
-            });
+            mLikeButton.setOnClickListener(view -> addTofavourite(movie));
         } else {
             mLikeButton.setImageResource(R.drawable.like_button_active);
-            mLikeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    boolean success = removeFromFavourite(movie);
-                    if (success){mLikeButton.setImageResource(R.drawable.like_button_off);}
-                }
+            mLikeButton.setOnClickListener(view -> {
+                boolean success = removeFromFavourite(movie);
+                if (success){mLikeButton.setImageResource(R.drawable.like_button_off);}
             });
         }
         cursor.close();
@@ -260,6 +253,33 @@ public class DetailMovieActivity extends AppCompatActivity  implements LoaderMan
         startActivity(intent);
     }
 
+    @Override
+    public void setLoadingIndicator(boolean active) {
+
+    }
+
+    @Override
+    public void showMovieUi(ResultPojo movie) {
+        String year = movie.getReleaseDate().substring(0,4);
+        mTitleAndRelease.setText(movie.getOriginalTitle().concat(" (").concat(year).concat(")"));
+        mRates.setText(Float.toString(movie.getVoteAverage()));
+        mDescription.setText(movie.getOverview());
+        mRelease.setText(getResources().getString(R.string.release).concat(" : ").concat(movie.getReleaseDate()));
+        URL imagePathUrl = NetworkUtils.buildImagePathUrl(movie.getBackdropPath(),"w500");
+        Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mBackdrop);
+    }
+
+
+
+    @Override
+    public void checkFavorite() {
+
+    }
+
+    @Override
+    public void setPresenter(DetailMovieContract.Presenter presenter) {
+        mPresenter = checkNotNull(presenter);
+    }
 
 
 //    public void goToMoreVideo(View view) {

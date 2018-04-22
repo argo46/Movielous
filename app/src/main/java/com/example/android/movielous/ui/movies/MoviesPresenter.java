@@ -8,19 +8,21 @@ import com.example.android.movielous.Models.ResultPojo;
 import com.example.android.movielous.Rest.ApiClient;
 import com.example.android.movielous.Rest.ApiInterface;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
-public class MoviesPresenter implements com.example.android.movielous.ui.movies.MoviesContract.Presenter {
+public class MoviesPresenter implements MoviesContract.Presenter {
 
-    private final com.example.android.movielous.ui.movies.MoviesContract.View mMoviesView;
+    private final MoviesContract.View mMoviesView;
 
 
-    public MoviesPresenter(@NonNull com.example.android.movielous.ui.movies.MoviesContract.View moviesView){
+    public MoviesPresenter(@NonNull MoviesContract.View moviesView){
         mMoviesView = checkNotNull(moviesView, "moviesView cannot be null!");
 
         mMoviesView.setPresenter(this);
@@ -28,56 +30,49 @@ public class MoviesPresenter implements com.example.android.movielous.ui.movies.
 
     @Override
     public void start() {
-
     }
 
 
     @Override
     public void loadMovies(String sortBy, boolean isInit, int page) {
 
-//        int page=1;
         if (isInit){page = 1;}
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        //mLoadingPB.setVisibility(View.VISIBLE);
+
         mMoviesView.setLoadingIndicator(true);
-        Call<MoviePojo> call = apiService.getMovies(sortBy,"", page);
-        call.enqueue(new Callback<MoviePojo>() {
+        Observable<MoviePojo> obs1 = apiService.getMovies(sortBy, page);
+        obs1.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Observer<MoviePojo>() {
             @Override
-            public void onResponse(Call<MoviePojo> call, Response<MoviePojo> response) {
-//                mMoviesView.setLoadingIndicator(true);
-                Integer statusCode = response.code();
-                Log.d("MoviesActivity","Status Code : " + statusCode.toString());
+            public void onSubscribe(Disposable d) { }
 
-                if(statusCode == 200){
-                    MoviePojo movies = response.body();
-                    if (isInit){
-                        mMoviesView.showMovies(movies);
-//                        mMovieAdapter.setmMovieData(movies);
-                    } else{
-//                        mMovieAdapter.addMovieData(movies);
-                        mMoviesView.showMoreMovies(movies);
-                    }
-
-                    //mLoadingPB.setVisibility(View.INVISIBLE);
-                    mMoviesView.setLoadingIndicator(false);
-                    Log.d("MoviesActivity", "Received page = " + Integer.toString(movies.getPage()));
-//                    loading = true;
-                    mMoviesView.setPaginationBool(true);
-
+            @Override
+            public void onNext(MoviePojo movies) {
+                if (isInit){
+                    mMoviesView.showMovies(movies);
                 } else {
-//                    showError();
-                    mMoviesView.showError();
+                    mMoviesView.showMoreMovies(movies);
                 }
+
+                mMoviesView.setLoadingIndicator(false);
+                Log.d("MoviesActivity", "Received page = " + Integer.toString(movies.getPage()));
+                mMoviesView.setPaginationBool(true);
             }
 
             @Override
-            public void onFailure(Call<MoviePojo> call, Throwable t) {
-//                showError();
+            public void onError(Throwable e) {
+                Log.e("MoviesActivity Error", e.toString());
+                mMoviesView.setLoadingIndicator(false);
                 mMoviesView.showError();
-                Log.e("MoviesActivity error : ", t.toString());
             }
+
+            @Override
+            public void onComplete() { }
         });
+
     }
 
     @Override
@@ -87,6 +82,6 @@ public class MoviesPresenter implements com.example.android.movielous.ui.movies.
 
     @Override
     public void openFavoriteMovie() {
-
+        mMoviesView.showFavoriteMovieUi();
     }
 }
