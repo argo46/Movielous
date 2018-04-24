@@ -1,14 +1,10 @@
 package com.example.android.movielous.ui.detailMovie;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,25 +13,24 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.movielous.Models.MovieReview;
-import com.example.android.movielous.Models.MovieVideo;
 import com.example.android.movielous.Models.ResultPojo;
-import com.example.android.movielous.MoreReview;
+import com.example.android.movielous.Models.reviews.ReviewHeader;
+import com.example.android.movielous.Models.reviews.Reviews;
+import com.example.android.movielous.Models.videos.Videos;
+import com.example.android.movielous.Models.videos.VideosHeader;
 import com.example.android.movielous.R;
 import com.example.android.movielous.Utils.NetworkUtils;
-import com.example.android.movielous.Utils.TheMovieDBJsonUtils;
 import com.example.android.movielous.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class DetailMovieActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<List>, DetailMovieContract.View{
+        implements DetailMovieContract.View{
 
     private DetailMovieContract.Presenter mPresenter;
     private DetailMoviePresenter mDetailMoviePresenter;
@@ -45,8 +40,8 @@ public class DetailMovieActivity extends AppCompatActivity
     private ImageView mBackdrop, mLikeButton;
     private ImageButton mVideo1;
     private ResultPojo movie;
-    private ArrayList<MovieReview> listReview;
-    private ArrayList<MovieVideo> listVideo;
+    //private ArrayList<MovieReview> listReview;
+//    private ArrayList<MovieVideo> listVideo;
     public static final String[] MOVIE_DETAIL_PROJECTION = {
             MovieContract.MovieEntry.COLUMN_TITLE,
             MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE,
@@ -87,7 +82,8 @@ public class DetailMovieActivity extends AppCompatActivity
         showMovieUi(movie);
 
 
-        getSupportLoaderManager().initLoader(23, null, this);
+        //getSupportLoaderManager().initLoader(23, null, this);
+        mPresenter.loadData(movie.getId());
         checkFavourite(Integer.toString(movie.getId()));
 
 
@@ -106,106 +102,106 @@ public class DetailMovieActivity extends AppCompatActivity
     }
 
 
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public Loader<List> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<List>(this) {
-            List<MovieReview> result = null;
+//    @SuppressLint("StaticFieldLeak")
+//    @Override
+//    public Loader<List> onCreateLoader(int id, Bundle args) {
+//        return new AsyncTaskLoader<List>(this) {
+//            List<MovieReview> result = null;
+//
+//            @Override
+//            protected void onStartLoading() {
+//                if (result != null){
+//                    deliverResult(result);
+//                } else {
+//                    mLoading.setVisibility(View.VISIBLE);
+//                    forceLoad();
+//                }
+//            }
+//
+//            @Override
+//            public List loadInBackground() {
+//                String id = Integer.toString(movie.getId());
+//                URL reviewRequest = NetworkUtils.buildReviewUrl(id);
+//                URL videoRequest = NetworkUtils.buildVideoUrl(id);
+//
+//                try {
+//                    String JSONMovieDataResponse = NetworkUtils.getResponseFromHttpUrl(reviewRequest);
+//                    String JSONMovieVideoResponse = NetworkUtils.getResponseFromHttpUrl(videoRequest);
+//
+//                    List dataMovie = new ArrayList();
+//
+//                    List<MovieReview> simpleJsonMovieReview = new ArrayList();
+//                    simpleJsonMovieReview = TheMovieDBJsonUtils.getSimpleReviewFromJson(DetailMovieActivity.this,JSONMovieDataResponse);
+//                    dataMovie.add(simpleJsonMovieReview);
+//
+//                    List<MovieVideo> simpleJsonMovieVideo = new ArrayList();
+//                    simpleJsonMovieVideo = TheMovieDBJsonUtils.getSimpleVideoFromJson(DetailMovieActivity.this, JSONMovieVideoResponse);
+//                    dataMovie.add(simpleJsonMovieVideo);
+//                    return dataMovie;
+//                }
+//                catch (Exception e){
+//                    e.printStackTrace();
+//                    return null;
+//                }
+//            }
+//            @Override
+//            public void deliverResult(List data) {
+//                result = data;
+//                super.deliverResult(data);
+//            }
+//        };
+//    }
 
-            @Override
-            protected void onStartLoading() {
-                if (result != null){
-                    deliverResult(result);
-                } else {
-                    mLoading.setVisibility(View.VISIBLE);
-                    forceLoad();
-                }
-            }
+//    @Override
+//    public void onLoadFinished(Loader<List> loader, List data) {
+//        mLoading.setVisibility(View.INVISIBLE);
+//        if (data != null && data.size() > 1){
+//            List<MovieReview> listMovieReview =(List<MovieReview>) data.get(0);
+//            listReview = (ArrayList<MovieReview>) data.get(0);
+//            List<MovieVideo> listMovieVideo = (List<MovieVideo>) data.get(1);
+//            listVideo = (ArrayList<MovieVideo>) data.get(0);
+//
+//            if (listMovieReview != null && listMovieReview.size() != 0){
+//                MovieReview review = listMovieReview.get(0);
+//                mReviewerName.setText("A review by ".concat(review.getReviewerName()));
+//                String contentReview = review.getContentReview();
+//                if (contentReview.length()>250){contentReview = contentReview.substring(0,250).concat("...");}
+//                mReview.setText(contentReview);
+//                mOtherReview.setVisibility(View.VISIBLE);
+//            } else {
+//                mReviewerName.setText("No review yet");
+//                mOtherReview.setVisibility(View.INVISIBLE);
+//
+//            }
+//            if (listMovieVideo != null && listMovieVideo.size() != 0){
+//                MovieVideo video = listMovieVideo.get(0);
+//                if (video.getSite().equals("YouTube")){
+//                    final String key = video.getKey();
+//                    URL imagePathUrl = NetworkUtils.buildYoutubeTumbnailVideoUrl(key);
+//                    Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mVideo1);
+//
+//                    mVideo1.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            try {
+//                                youtubeVideo(key);
+//                            } catch (Exception e){
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//
+//
+//        }
+//        else{}
+//    }
 
-            @Override
-            public List loadInBackground() {
-                String id = Integer.toString(movie.getId());
-                URL reviewRequest = NetworkUtils.buildReviewUrl(id);
-                URL videoRequest = NetworkUtils.buildVideoUrl(id);
-
-                try {
-                    String JSONMovieDataResponse = NetworkUtils.getResponseFromHttpUrl(reviewRequest);
-                    String JSONMovieVideoResponse = NetworkUtils.getResponseFromHttpUrl(videoRequest);
-
-                    List dataMovie = new ArrayList();
-
-                    List<MovieReview> simpleJsonMovieReview = new ArrayList();
-                    simpleJsonMovieReview = TheMovieDBJsonUtils.getSimpleReviewFromJson(DetailMovieActivity.this,JSONMovieDataResponse);
-                    dataMovie.add(simpleJsonMovieReview);
-
-                    List<MovieVideo> simpleJsonMovieVideo = new ArrayList();
-                    simpleJsonMovieVideo = TheMovieDBJsonUtils.getSimpleVideoFromJson(DetailMovieActivity.this, JSONMovieVideoResponse);
-                    dataMovie.add(simpleJsonMovieVideo);
-                    return dataMovie;
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-            @Override
-            public void deliverResult(List data) {
-                result = data;
-                super.deliverResult(data);
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List> loader, List data) {
-        mLoading.setVisibility(View.INVISIBLE);
-        if (data != null && data.size() > 1){
-            List<MovieReview> listMovieReview =(List<MovieReview>) data.get(0);
-            listReview = (ArrayList<MovieReview>) data.get(0);
-            List<MovieVideo> listMovieVideo = (List<MovieVideo>) data.get(1);
-            listVideo = (ArrayList<MovieVideo>) data.get(0);
-
-            if (listMovieReview != null && listMovieReview.size() != 0){
-                MovieReview review = listMovieReview.get(0);
-                mReviewerName.setText("A review by ".concat(review.getReviewerName()));
-                String contentReview = review.getContentReview();
-                if (contentReview.length()>250){contentReview = contentReview.substring(0,250).concat("...");}
-                mReview.setText(contentReview);
-                mOtherReview.setVisibility(View.VISIBLE);
-            } else {
-                mReviewerName.setText("No review yet");
-                mOtherReview.setVisibility(View.INVISIBLE);
-
-            }
-            if (listMovieVideo != null && listMovieVideo.size() != 0){
-                MovieVideo video = listMovieVideo.get(0);
-                if (video.getSite().equals("YouTube")){
-                    final String key = video.getKey();
-                    URL imagePathUrl = NetworkUtils.buildYoutubeTumbnailVideoUrl(key);
-                    Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mVideo1);
-
-                    mVideo1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            try {
-                                youtubeVideo(key);
-                            } catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            }
-
-
-        }
-        else{}
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List> loader) {
-
-    }
+//    @Override
+//    public void onLoaderReset(Loader<List> loader) {
+//
+//    }
 
     public void addTofavourite(ResultPojo movie) {
         ContentValues movieValues = new ContentValues();
@@ -247,11 +243,11 @@ public class DetailMovieActivity extends AppCompatActivity
     }
 
 
-    public void goToMoreReview(View view) {
-        Intent intent = new Intent(this, MoreReview.class);
-        intent.putParcelableArrayListExtra("Reviews",listReview);
-        startActivity(intent);
-    }
+//    public void goToMoreReview(View view) {
+//        Intent intent = new Intent(this, MoreReview.class);
+//        intent.putParcelableArrayListExtra("Reviews",listReview);
+//        startActivity(intent);
+//    }
 
     @Override
     public void setLoadingIndicator(boolean active) {
@@ -269,6 +265,51 @@ public class DetailMovieActivity extends AppCompatActivity
         Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mBackdrop);
     }
 
+    @Override
+    public void showMovieReview(ReviewHeader reviewHeader) {
+       List<Reviews> reviews = reviewHeader.getResults();
+
+        if (reviews != null && reviews.size() != 0){
+            Reviews review = reviews.get(0);
+            mReviewerName.setText("A review by ".concat(review.getAuthor()));
+            String contentReview = review.getContent();
+            if (contentReview.length()>250){contentReview = contentReview.substring(0,250).concat("...");}
+            mReview.setText(contentReview);
+            mOtherReview.setVisibility(View.VISIBLE);
+        } else {
+            mReviewerName.setText("No review yet");
+            mOtherReview.setVisibility(View.INVISIBLE);
+
+        }
+
+    }
+
+    @Override
+    public void showVideos(VideosHeader videosHeader) {
+
+        List<Videos> videos = videosHeader.getResults();
+
+        if (videos != null && videos.size() != 0){
+            Videos video = videos.get(0);
+            if (video.getSite().equals("YouTube")){
+                final String key = video.getKey();
+                URL imagePathUrl = NetworkUtils.buildYoutubeTumbnailVideoUrl(key);
+                Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mVideo1);
+
+                mVideo1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            youtubeVideo(key);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }
+
+    }
 
 
     @Override
