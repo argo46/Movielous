@@ -1,4 +1,4 @@
-package com.example.android.movielous;
+package com.example.android.movielous.ui.moreReview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.movielous.Models.MovieReview;
+
+import com.example.android.movielous.R;
+import com.example.android.movielous.data.models.reviews.Reviews;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
 
 public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.MovieReviewAdapterViewHolder>{
 
-    List<MovieReview> reviews = new ArrayList<>();
+    List<Reviews> reviews = new ArrayList<>();
 
     public class MovieReviewAdapterViewHolder extends RecyclerView.ViewHolder {
         public final TextView mReviewer;
@@ -40,8 +42,8 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
     @Override
     public void onBindViewHolder(MovieReviewAdapterViewHolder holder, int position) {
-        String reviewer = reviews.get(position).getReviewerName();
-        String contentReview = reviews.get(position).getContentReview();
+        String reviewer = reviews.get(position).getAuthor();
+        String contentReview = reviews.get(position).getContent();
         holder.mReviewer.setText(reviewer);
         holder.mContentReview.setText(contentReview);
     }
@@ -54,7 +56,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
         return reviews.size();
     }
 
-    public void setReviewsData(ArrayList reviews){
+    public void setReviewsData(List reviews){
         this.reviews = reviews;
         notifyDataSetChanged();
     }

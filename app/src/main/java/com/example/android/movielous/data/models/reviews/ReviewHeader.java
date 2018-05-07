@@ -1,4 +1,4 @@
-package com.example.android.movielous.Models.reviews;
+package com.example.android.movielous.data.models.reviews;
 
 import android.os.Parcel;
 import android.os.Parcelable;

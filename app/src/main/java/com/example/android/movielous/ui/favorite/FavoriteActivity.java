@@ -1,4 +1,4 @@
-package com.example.android.movielous;
+package com.example.android.movielous.ui.favorite;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +15,9 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.android.movielous.Models.ResultPojo;
-import com.example.android.movielous.data.MovieContract;
+import com.example.android.movielous.data.models.movies.Movies;
+import com.example.android.movielous.R;
+import com.example.android.movielous.data.db.MovieContract;
 import com.example.android.movielous.ui.detailMovie.DetailMovieActivity;
 
 public class FavoriteActivity extends AppCompatActivity
@@ -137,7 +138,7 @@ public class FavoriteActivity extends AppCompatActivity
     public void onClick(String id) {
 
         String mId = id;
-        ResultPojo movie = new ResultPojo();
+        Movies movie = new Movies();
         Uri uri = MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(mId).build();
         Cursor cursor = getContentResolver().query(uri, MOVIE_FAVORITE_PROJECTION,null,null,null);
         cursor.moveToFirst();

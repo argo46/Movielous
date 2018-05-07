@@ -1,4 +1,4 @@
-package com.example.android.movielous;
+package com.example.android.movielous.ui.moreReview;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,13 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.example.android.movielous.R;
+import com.example.android.movielous.data.models.reviews.ReviewHeader;
 
 public class MoreReview extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MovieReviewsAdapter movieReviewsAdapter;
-    private int mPosition = RecyclerView.NO_POSITION;
+    private ReviewHeader reviews;
 
 
     @Override
@@ -28,14 +29,13 @@ public class MoreReview extends AppCompatActivity {
         movieReviewsAdapter = new MovieReviewsAdapter();
         mRecyclerView.setAdapter(movieReviewsAdapter);
 
-        ArrayList list = new ArrayList<>();
         Intent intentFromParent = getIntent();
         if (intentFromParent != null){
             if (intentFromParent.hasExtra("Reviews")){
-                list = intentFromParent.getParcelableArrayListExtra("Reviews");
+                reviews = intentFromParent.getParcelableExtra("Reviews");
             }
         }
 
-        movieReviewsAdapter.setReviewsData(list);
+        movieReviewsAdapter.setReviewsData(reviews.getResults());
     }
 }

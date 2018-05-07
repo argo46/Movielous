@@ -3,10 +3,10 @@ package com.example.android.movielous.ui.detailMovie;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.android.movielous.Models.reviews.ReviewHeader;
-import com.example.android.movielous.Models.videos.VideosHeader;
-import com.example.android.movielous.Rest.ApiClient;
-import com.example.android.movielous.Rest.ApiInterface;
+import com.example.android.movielous.data.Rest.ApiClient;
+import com.example.android.movielous.data.Rest.ApiInterface;
+import com.example.android.movielous.data.models.reviews.ReviewHeader;
+import com.example.android.movielous.data.models.videos.VideosHeader;
 
 import java.util.ArrayList;
 
@@ -74,17 +74,6 @@ public class DetailMoviePresenter implements DetailMovieContract.Presenter{
                     }
                 });
 
-//                Observable.zip(reviews,
-//                videos,
-//                (reviewHeader, videosHeader) -> {
-//                    ArrayList<Object>  response= new ArrayList<Object>();
-//                    response.add(reviewHeader);
-//                    response.add(videosHeader);
-//                    return null;
-//                })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe();
     }
 
     @Override
@@ -98,8 +87,8 @@ public class DetailMoviePresenter implements DetailMovieContract.Presenter{
     }
 
     @Override
-    public void goToMoreReview() {
-
+    public void goToMoreReview(ReviewHeader reviews) {
+       mDetailMovieView.showMoreReviewUi(reviews);
     }
 
     @Override

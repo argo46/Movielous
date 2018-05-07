@@ -1,8 +1,8 @@
-package com.example.android.movielous.Rest;
+package com.example.android.movielous.data.Rest;
 
-import com.example.android.movielous.Models.MoviePojo;
-import com.example.android.movielous.Models.reviews.ReviewHeader;
-import com.example.android.movielous.Models.videos.VideosHeader;
+import com.example.android.movielous.data.models.movies.MoviesHeader;
+import com.example.android.movielous.data.models.reviews.ReviewHeader;
+import com.example.android.movielous.data.models.videos.VideosHeader;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -17,7 +17,7 @@ public interface ApiInterface {
 
 
     @GET("movie/{sortBy}")
-    Observable<MoviePojo> getMovies(@Path("sortBy") String sortBy, @Query("page") int page);
+    Observable<MoviesHeader> getMovies(@Path("sortBy") String sortBy, @Query("page") int page);
 
     @GET("movie/{movie_id}/reviews")
     Observable<ReviewHeader> getReviews(@Path("movie_id") int id);

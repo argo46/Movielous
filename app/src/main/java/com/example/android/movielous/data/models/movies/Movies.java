@@ -1,4 +1,4 @@
-package com.example.android.movielous.Models;
+package com.example.android.movielous.data.models.movies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,7 +13,7 @@ import java.util.List;
  * Created by PC-Lenovo on 28/12/2017.
  */
 
-public class ResultPojo implements Parcelable {
+public class Movies implements Parcelable {
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
@@ -192,10 +192,10 @@ public class ResultPojo implements Parcelable {
         dest.writeString(this.releaseDate);
     }
 
-    public ResultPojo() {
+    public Movies() {
     }
 
-    protected ResultPojo(Parcel in) {
+    protected Movies(Parcel in) {
         this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
@@ -213,15 +213,15 @@ public class ResultPojo implements Parcelable {
         this.releaseDate = in.readString();
     }
 
-    public static final Parcelable.Creator<ResultPojo> CREATOR = new Parcelable.Creator<ResultPojo>() {
+    public static final Parcelable.Creator<Movies> CREATOR = new Parcelable.Creator<Movies>() {
         @Override
-        public ResultPojo createFromParcel(Parcel source) {
-            return new ResultPojo(source);
+        public Movies createFromParcel(Parcel source) {
+            return new Movies(source);
         }
 
         @Override
-        public ResultPojo[] newArray(int size) {
-            return new ResultPojo[size];
+        public Movies[] newArray(int size) {
+            return new Movies[size];
         }
     };
 }

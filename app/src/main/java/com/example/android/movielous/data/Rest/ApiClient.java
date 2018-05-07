@@ -1,4 +1,4 @@
-package com.example.android.movielous.Rest;
+package com.example.android.movielous.data.Rest;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

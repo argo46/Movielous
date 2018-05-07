@@ -15,9 +15,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.movielous.FavoriteActivity;
-import com.example.android.movielous.Models.MoviePojo;
-import com.example.android.movielous.Models.ResultPojo;
+import com.example.android.movielous.ui.favorite.FavoriteActivity;
+import com.example.android.movielous.data.models.movies.MoviesHeader;
+import com.example.android.movielous.data.models.movies.Movies;
 import com.example.android.movielous.R;
 import com.example.android.movielous.ui.detailMovie.DetailMovieActivity;
 import com.facebook.stetho.Stetho;
@@ -114,6 +114,7 @@ public class MoviesActivity extends AppCompatActivity
 
 //        fetchData(sortBy, true);
         mPresenter.loadMovies(sortBy,true, page);
+
     }
 
     /**
@@ -147,12 +148,12 @@ public class MoviesActivity extends AppCompatActivity
      * @param movie
      */
     @Override
-    public void onClick(ResultPojo movie) {
+    public void onClick(Movies movie) {
         mPresenter.openMovieDetail(movie);
     }
 
     @Override
-    public void showDetailMovieUi(ResultPojo movie) {
+    public void showDetailMovieUi(Movies movie) {
         Intent intent = new Intent(this,DetailMovieActivity.class);
         intent.putExtra("Movie", movie);
         startActivity(intent);
@@ -210,7 +211,7 @@ public class MoviesActivity extends AppCompatActivity
     }
 
     @Override
-    public void showMovies(MoviePojo movies) {
+    public void showMovies(MoviesHeader movies) {
         mErrorMessage.setVisibility(View.INVISIBLE);
         mGoToFavorite.setVisibility(View.INVISIBLE);
 
@@ -220,7 +221,7 @@ public class MoviesActivity extends AppCompatActivity
     }
 
     @Override
-    public void showMoreMovies(MoviePojo movies) {
+    public void showMoreMovies(MoviesHeader movies) {
         mMoviesAdapter.addMovieData(movies);
     }
 

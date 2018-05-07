@@ -1,4 +1,4 @@
-package com.example.android.movielous.data;
+package com.example.android.movielous.data.db;
 
 import android.net.Uri;
 import android.provider.BaseColumns;

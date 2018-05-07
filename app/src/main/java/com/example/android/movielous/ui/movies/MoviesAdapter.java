@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.movielous.Models.MoviePojo;
-import com.example.android.movielous.Models.ResultPojo;
+import com.example.android.movielous.data.models.movies.MoviesHeader;
+import com.example.android.movielous.data.models.movies.Movies;
 import com.example.android.movielous.R;
 import com.example.android.movielous.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -23,12 +23,12 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieAdapterViewHolder>{
 
-    MoviePojo respon= new MoviePojo();
-    List<ResultPojo> movies = new ArrayList();
+    private MoviesHeader respon= new MoviesHeader();
+    private List<Movies> movies = new ArrayList();
     private final MovieAdapterOnClickHandler mClickHandler;
 
     public interface MovieAdapterOnClickHandler{
-        void onClick(ResultPojo movie);
+        void onClick(Movies movie);
     }
 
 
@@ -49,7 +49,7 @@ public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements V
 
     @Override
     public void onClick(View view) {
-        ResultPojo movie = movies.get(getAdapterPosition());
+        Movies movie = movies.get(getAdapterPosition());
         mClickHandler.onClick(movie);
     }
 }
@@ -81,13 +81,13 @@ public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements V
         return movies.size();
     }
 
-    public void setmMovieData(MoviePojo movies) {
+    public void setmMovieData(MoviesHeader movies) {
         this.respon = movies;
         this.movies = respon.getResults();
         notifyDataSetChanged();
     }
 
-    public void addMovieData(MoviePojo movies){
+    public void addMovieData(MoviesHeader movies){
         this.movies.addAll(movies.getResults());
         notifyDataSetChanged();
     }

@@ -13,14 +13,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.movielous.Models.ResultPojo;
-import com.example.android.movielous.Models.reviews.ReviewHeader;
-import com.example.android.movielous.Models.reviews.Reviews;
-import com.example.android.movielous.Models.videos.Videos;
-import com.example.android.movielous.Models.videos.VideosHeader;
 import com.example.android.movielous.R;
 import com.example.android.movielous.Utils.NetworkUtils;
-import com.example.android.movielous.data.MovieContract;
+import com.example.android.movielous.data.db.MovieContract;
+import com.example.android.movielous.data.models.movies.Movies;
+import com.example.android.movielous.data.models.reviews.ReviewHeader;
+import com.example.android.movielous.data.models.reviews.Reviews;
+import com.example.android.movielous.data.models.videos.Videos;
+import com.example.android.movielous.data.models.videos.VideosHeader;
+import com.example.android.movielous.ui.moreReview.MoreReview;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
@@ -32,6 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DetailMovieActivity extends AppCompatActivity
         implements DetailMovieContract.View{
 
+
     private DetailMovieContract.Presenter mPresenter;
     private DetailMoviePresenter mDetailMoviePresenter;
     private ProgressBar mLoading;
@@ -39,9 +41,8 @@ public class DetailMovieActivity extends AppCompatActivity
     private TextView mDescription;
     private ImageView mBackdrop, mLikeButton;
     private ImageButton mVideo1;
-    private ResultPojo movie;
-    //private ArrayList<MovieReview> listReview;
-//    private ArrayList<MovieVideo> listVideo;
+    private Movies movie;
+
     public static final String[] MOVIE_DETAIL_PROJECTION = {
             MovieContract.MovieEntry.COLUMN_TITLE,
             MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE,
@@ -102,108 +103,7 @@ public class DetailMovieActivity extends AppCompatActivity
     }
 
 
-//    @SuppressLint("StaticFieldLeak")
-//    @Override
-//    public Loader<List> onCreateLoader(int id, Bundle args) {
-//        return new AsyncTaskLoader<List>(this) {
-//            List<MovieReview> result = null;
-//
-//            @Override
-//            protected void onStartLoading() {
-//                if (result != null){
-//                    deliverResult(result);
-//                } else {
-//                    mLoading.setVisibility(View.VISIBLE);
-//                    forceLoad();
-//                }
-//            }
-//
-//            @Override
-//            public List loadInBackground() {
-//                String id = Integer.toString(movie.getId());
-//                URL reviewRequest = NetworkUtils.buildReviewUrl(id);
-//                URL videoRequest = NetworkUtils.buildVideoUrl(id);
-//
-//                try {
-//                    String JSONMovieDataResponse = NetworkUtils.getResponseFromHttpUrl(reviewRequest);
-//                    String JSONMovieVideoResponse = NetworkUtils.getResponseFromHttpUrl(videoRequest);
-//
-//                    List dataMovie = new ArrayList();
-//
-//                    List<MovieReview> simpleJsonMovieReview = new ArrayList();
-//                    simpleJsonMovieReview = TheMovieDBJsonUtils.getSimpleReviewFromJson(DetailMovieActivity.this,JSONMovieDataResponse);
-//                    dataMovie.add(simpleJsonMovieReview);
-//
-//                    List<MovieVideo> simpleJsonMovieVideo = new ArrayList();
-//                    simpleJsonMovieVideo = TheMovieDBJsonUtils.getSimpleVideoFromJson(DetailMovieActivity.this, JSONMovieVideoResponse);
-//                    dataMovie.add(simpleJsonMovieVideo);
-//                    return dataMovie;
-//                }
-//                catch (Exception e){
-//                    e.printStackTrace();
-//                    return null;
-//                }
-//            }
-//            @Override
-//            public void deliverResult(List data) {
-//                result = data;
-//                super.deliverResult(data);
-//            }
-//        };
-//    }
-
-//    @Override
-//    public void onLoadFinished(Loader<List> loader, List data) {
-//        mLoading.setVisibility(View.INVISIBLE);
-//        if (data != null && data.size() > 1){
-//            List<MovieReview> listMovieReview =(List<MovieReview>) data.get(0);
-//            listReview = (ArrayList<MovieReview>) data.get(0);
-//            List<MovieVideo> listMovieVideo = (List<MovieVideo>) data.get(1);
-//            listVideo = (ArrayList<MovieVideo>) data.get(0);
-//
-//            if (listMovieReview != null && listMovieReview.size() != 0){
-//                MovieReview review = listMovieReview.get(0);
-//                mReviewerName.setText("A review by ".concat(review.getReviewerName()));
-//                String contentReview = review.getContentReview();
-//                if (contentReview.length()>250){contentReview = contentReview.substring(0,250).concat("...");}
-//                mReview.setText(contentReview);
-//                mOtherReview.setVisibility(View.VISIBLE);
-//            } else {
-//                mReviewerName.setText("No review yet");
-//                mOtherReview.setVisibility(View.INVISIBLE);
-//
-//            }
-//            if (listMovieVideo != null && listMovieVideo.size() != 0){
-//                MovieVideo video = listMovieVideo.get(0);
-//                if (video.getSite().equals("YouTube")){
-//                    final String key = video.getKey();
-//                    URL imagePathUrl = NetworkUtils.buildYoutubeTumbnailVideoUrl(key);
-//                    Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mVideo1);
-//
-//                    mVideo1.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            try {
-//                                youtubeVideo(key);
-//                            } catch (Exception e){
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//
-//
-//        }
-//        else{}
-//    }
-
-//    @Override
-//    public void onLoaderReset(Loader<List> loader) {
-//
-//    }
-
-    public void addTofavourite(ResultPojo movie) {
+    public void addTofavourite(Movies movie) {
         ContentValues movieValues = new ContentValues();
         movieValues.put(MovieContract.MovieEntry._ID, movie.getId());
         movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
@@ -218,7 +118,7 @@ public class DetailMovieActivity extends AppCompatActivity
         checkFavourite(Integer.toString(movie.getId()));
     }
 
-    private boolean removeFromFavourite(ResultPojo movie) {
+    private boolean removeFromFavourite(Movies movie) {
         int response = this.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
                 MovieContract.MovieEntry._ID + "=" + movie.getId(),null);
         return response > 0;
@@ -244,9 +144,7 @@ public class DetailMovieActivity extends AppCompatActivity
 
 
 //    public void goToMoreReview(View view) {
-//        Intent intent = new Intent(this, MoreReview.class);
-//        intent.putParcelableArrayListExtra("Reviews",listReview);
-//        startActivity(intent);
+//
 //    }
 
     @Override
@@ -255,7 +153,7 @@ public class DetailMovieActivity extends AppCompatActivity
     }
 
     @Override
-    public void showMovieUi(ResultPojo movie) {
+    public void showMovieUi(Movies movie) {
         String year = movie.getReleaseDate().substring(0,4);
         mTitleAndRelease.setText(movie.getOriginalTitle().concat(" (").concat(year).concat(")"));
         mRates.setText(Float.toString(movie.getVoteAverage()));
@@ -276,6 +174,9 @@ public class DetailMovieActivity extends AppCompatActivity
             if (contentReview.length()>250){contentReview = contentReview.substring(0,250).concat("...");}
             mReview.setText(contentReview);
             mOtherReview.setVisibility(View.VISIBLE);
+            mOtherReview.setOnClickListener(view -> {
+                mPresenter.goToMoreReview(reviewHeader);
+            });
         } else {
             mReviewerName.setText("No review yet");
             mOtherReview.setVisibility(View.INVISIBLE);
@@ -296,19 +197,23 @@ public class DetailMovieActivity extends AppCompatActivity
                 URL imagePathUrl = NetworkUtils.buildYoutubeTumbnailVideoUrl(key);
                 Picasso.with(DetailMovieActivity.this).load(imagePathUrl.toString()).into(mVideo1);
 
-                mVideo1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        try {
-                            youtubeVideo(key);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
+                mVideo1.setOnClickListener(view -> {
+                    try {
+                        youtubeVideo(key);
+                    } catch (Exception e){
+                        e.printStackTrace();
                     }
                 });
             }
         }
 
+    }
+
+    @Override
+    public void showMoreReviewUi(ReviewHeader reviews) {
+        Intent intent = new Intent(this, MoreReview.class);
+        intent.putExtra("Reviews",reviews);
+        startActivity(intent);
     }
 
 
@@ -321,6 +226,8 @@ public class DetailMovieActivity extends AppCompatActivity
     public void setPresenter(DetailMovieContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
+
+
 
 
 //    public void goToMoreVideo(View view) {

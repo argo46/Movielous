@@ -3,10 +3,10 @@ package com.example.android.movielous.ui.movies;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.android.movielous.Models.MoviePojo;
-import com.example.android.movielous.Models.ResultPojo;
-import com.example.android.movielous.Rest.ApiClient;
-import com.example.android.movielous.Rest.ApiInterface;
+import com.example.android.movielous.data.models.movies.MoviesHeader;
+import com.example.android.movielous.data.models.movies.Movies;
+import com.example.android.movielous.data.Rest.ApiClient;
+import com.example.android.movielous.data.Rest.ApiInterface;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -41,16 +41,16 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
         mMoviesView.setLoadingIndicator(true);
-        Observable<MoviePojo> obs1 = apiService.getMovies(sortBy, page);
+        Observable<MoviesHeader> obs1 = apiService.getMovies(sortBy, page);
         obs1.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<MoviePojo>() {
+                .subscribe(new Observer<MoviesHeader>() {
             @Override
             public void onSubscribe(Disposable d) { }
 
             @Override
-            public void onNext(MoviePojo movies) {
+            public void onNext(MoviesHeader movies) {
                 if (isInit){
                     mMoviesView.showMovies(movies);
                 } else {
@@ -76,7 +76,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     @Override
-    public void openMovieDetail(ResultPojo movie) {
+    public void openMovieDetail(Movies movie) {
         mMoviesView.showDetailMovieUi(movie);
     }
 

@@ -1,4 +1,4 @@
-package com.example.android.movielous;
+package com.example.android.movielous.ui.favorite;
 
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.movielous.R;
 import com.example.android.movielous.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 

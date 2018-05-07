@@ -3,17 +3,18 @@ package com.example.android.movielous.ui.detailMovie;
 
 import com.example.android.movielous.BasePresenter;
 import com.example.android.movielous.BaseView;
-import com.example.android.movielous.Models.ResultPojo;
-import com.example.android.movielous.Models.reviews.ReviewHeader;
-import com.example.android.movielous.Models.videos.VideosHeader;
+import com.example.android.movielous.data.models.movies.Movies;
+import com.example.android.movielous.data.models.reviews.ReviewHeader;
+import com.example.android.movielous.data.models.videos.VideosHeader;
 
 public interface DetailMovieContract {
 
     interface View extends BaseView<Presenter>{
         void setLoadingIndicator(boolean active);
-        void showMovieUi(ResultPojo movie);
+        void showMovieUi(Movies movie);
         void showMovieReview(ReviewHeader reviewHeader);
         void showVideos(VideosHeader videosHeader);
+        void showMoreReviewUi(ReviewHeader reviews);
         void checkFavorite();
 
     }
@@ -22,7 +23,7 @@ public interface DetailMovieContract {
         void loadData(int movie_id);
         void addToFavorite();
         void removeFromFavorite();
-        void goToMoreReview();
+        void goToMoreReview(ReviewHeader reviews);
         void goToWatchVideo();
     }
 }

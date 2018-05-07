@@ -1,4 +1,4 @@
-package com.example.android.movielous.Models;
+package com.example.android.movielous.data.models.movies;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,7 +9,7 @@ import java.util.List;
  * Created by PC-Lenovo on 28/12/2017.
  */
 
-public class MoviePojo {
+public class MoviesHeader {
 
     @SerializedName("page")
     @Expose
@@ -22,7 +22,7 @@ public class MoviePojo {
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<ResultPojo> results = null;
+    private List<Movies> results = null;
 
     public Integer getPage() {
         return page;
@@ -48,11 +48,11 @@ public class MoviePojo {
         this.totalPages = totalPages;
     }
 
-    public List<ResultPojo> getResults() {
+    public List<Movies> getResults() {
         return results;
     }
 
-    public void setResults(List<ResultPojo> results) {
+    public void setResults(List<Movies> results) {
         this.results = results;
     }
 

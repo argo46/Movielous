@@ -1,4 +1,4 @@
-package com.example.android.movielous.data;
+package com.example.android.movielous.data.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
