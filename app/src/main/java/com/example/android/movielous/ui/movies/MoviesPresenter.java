@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.example.android.movielous.data.models.movies.MoviesHeader;
 import com.example.android.movielous.data.models.movies.Movies;
-import com.example.android.movielous.data.Rest.ApiClient;
-import com.example.android.movielous.data.Rest.ApiInterface;
+import com.example.android.movielous.data.rest.ApiClient;
+import com.example.android.movielous.data.rest.ApiInterface;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;

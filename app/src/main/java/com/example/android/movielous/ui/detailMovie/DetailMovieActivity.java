@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.movielous.R;
-import com.example.android.movielous.Utils.NetworkUtils;
+import com.example.android.movielous.utils.NetworkUtils;
 import com.example.android.movielous.data.db.MovieContract;
 import com.example.android.movielous.data.models.movies.Movies;
 import com.example.android.movielous.data.models.reviews.ReviewHeader;

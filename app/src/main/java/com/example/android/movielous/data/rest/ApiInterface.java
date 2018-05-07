@@ -1,4 +1,4 @@
-package com.example.android.movielous.data.Rest;
+package com.example.android.movielous.data.rest;
 
 import com.example.android.movielous.data.models.movies.MoviesHeader;
 import com.example.android.movielous.data.models.reviews.ReviewHeader;

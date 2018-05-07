@@ -1,4 +1,4 @@
-package com.example.android.movielous.Utils;
+package com.example.android.movielous.utils;
 
 import android.net.Uri;
 import android.util.Log;

@@ -3,8 +3,8 @@ package com.example.android.movielous.ui.detailMovie;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.android.movielous.data.Rest.ApiClient;
-import com.example.android.movielous.data.Rest.ApiInterface;
+import com.example.android.movielous.data.rest.ApiClient;
+import com.example.android.movielous.data.rest.ApiInterface;
 import com.example.android.movielous.data.models.reviews.ReviewHeader;
 import com.example.android.movielous.data.models.videos.VideosHeader;
 
