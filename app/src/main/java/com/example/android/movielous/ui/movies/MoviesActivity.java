@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -15,12 +16,15 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.movielous.ui.favorite.FavoriteActivity;
-import com.example.android.movielous.data.models.movies.MoviesHeader;
-import com.example.android.movielous.data.models.movies.Movies;
 import com.example.android.movielous.R;
+import com.example.android.movielous.data.models.movies.Movies;
+import com.example.android.movielous.data.models.movies.MoviesHeader;
 import com.example.android.movielous.ui.detailMovie.DetailMovieActivity;
+import com.example.android.movielous.ui.favorite.FavoriteActivity;
 import com.facebook.stetho.Stetho;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,39 +34,36 @@ public class MoviesActivity extends AppCompatActivity
 
     private MoviesContract.Presenter mPresenter;
     private MoviesPresenter mMoviesPresenter;
-    private RecyclerView mRecycleView;
     private MoviesAdapter mMoviesAdapter;
-    private ProgressBar mLoadingPB;
-    private TextView mErrorMessage, mSortByTitle;
-    private Button  mGoToFavorite;
-    private android.support.v7.widget.Toolbar toolbar;
+
+    @BindView(R.id.rv_movie_main) RecyclerView mRecycleView;
+    @BindView(R.id.pb_loading) ProgressBar mLoadingPB;
+    @BindView(R.id.tv_error) TextView mErrorMessage;
+    @BindView(R.id.tv_short_by_title) TextView mSortByTitle;
+    @BindView(R.id.go_to_favorite) Button mGoToFavorite;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+
     private static String sortBy = "popular";
     private static int page = 1;
     private static final String popular = "popular";
     private static final String top_rated = "top_rated";
     private static final String upcoming = "upcoming";
-    private static final String favorite = "favorite";
 
     private boolean loading = true;
     int firstVisibleItem, visibleItemCount, totalItemCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Stetho.initializeWithDefaults(this);
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setTitle(getString(R.string.app_name));
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        ButterKnife.bind(this);
 
-        mRecycleView = (RecyclerView) findViewById(R.id.rv_movie_main);
-        mLoadingPB = (ProgressBar) findViewById(R.id.pb_loading);
-        mErrorMessage = (TextView)findViewById(R.id.tv_error);
-        mSortByTitle = (TextView)findViewById(R.id.tv_short_by_title);
-        mGoToFavorite = (Button)findViewById(R.id.go_to_favorite);
+        setSupportActionBar(mToolbar);
+        setTitle(getString(R.string.app_name));
+        mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+
 
         mMoviesPresenter = new MoviesPresenter(this);
 
@@ -104,7 +105,6 @@ public class MoviesActivity extends AppCompatActivity
 
 
                             page ++;
-//                            fetchData(sortBy,false);
                             mPresenter.loadMovies(sortBy,false, page);
                         }
                     }
@@ -112,7 +112,6 @@ public class MoviesActivity extends AppCompatActivity
             }
         });
 
-//        fetchData(sortBy, true);
         mPresenter.loadMovies(sortBy,true, page);
 
     }
@@ -173,23 +172,19 @@ public class MoviesActivity extends AppCompatActivity
             case R.id.menu_srt_by_popular :
                 sortBy = popular;
                 mSortByTitle.setText(getResources().getString(R.string.popular));
-//                fetchData(sortBy, true);
                 mPresenter.loadMovies(sortBy,true, page);
                 return true;
             case R.id.menu_srt_by_top_rated :
                 sortBy = top_rated;
                 mSortByTitle.setText(getResources().getString(R.string.top_rated));
-//                fetchData(sortBy, true);
                 mPresenter.loadMovies(sortBy,true, page);
                 return true;
             case R.id.menu_srt_by_upcoming :
                 sortBy = upcoming;
                 mSortByTitle.setText(getResources().getString(R.string.upcoming));
-//                fetchData(sortBy, true);
                 mPresenter.loadMovies(sortBy,true, page);
                 return true;
             case  R.id.menu_refresh :
-//                fetchData(sortBy, true);
                 mPresenter.loadMovies(sortBy,true, page);
                 return true;
             case R.id.menu_favorite:

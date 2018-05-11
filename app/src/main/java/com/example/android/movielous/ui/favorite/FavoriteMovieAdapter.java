@@ -14,6 +14,9 @@ import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by PC-Lenovo on 08/08/2017.
  */
@@ -32,13 +35,13 @@ public class FavoriteMovieAdapter extends RecyclerView.Adapter<FavoriteMovieAdap
     }
 
     public class FavoriteMovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView mMovieTitleTV;
-        public final ImageView mMoviePosterIV;
+
+        @BindView(R.id.tv_movie_title) TextView mMovieTitleTV;
+        @BindView(R.id.iv_movie_poster) ImageView mMoviePosterIV;
 
         public FavoriteMovieViewHolder(View view){
             super(view);
-            mMovieTitleTV = (TextView) view.findViewById(R.id.tv_movie_title);
-            mMoviePosterIV = (ImageView)view.findViewById(R.id.iv_movie_poster);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 

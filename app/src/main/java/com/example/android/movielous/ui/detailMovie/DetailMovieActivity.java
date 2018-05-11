@@ -8,13 +8,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.movielous.R;
-import com.example.android.movielous.utils.NetworkUtils;
 import com.example.android.movielous.data.db.MovieContract;
 import com.example.android.movielous.data.models.movies.Movies;
 import com.example.android.movielous.data.models.reviews.ReviewHeader;
@@ -22,10 +20,14 @@ import com.example.android.movielous.data.models.reviews.Reviews;
 import com.example.android.movielous.data.models.videos.Videos;
 import com.example.android.movielous.data.models.videos.VideosHeader;
 import com.example.android.movielous.ui.moreReview.MoreReview;
+import com.example.android.movielous.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,11 +38,19 @@ public class DetailMovieActivity extends AppCompatActivity
 
     private DetailMovieContract.Presenter mPresenter;
     private DetailMoviePresenter mDetailMoviePresenter;
-    private ProgressBar mLoading;
-    private TextView mTitleAndRelease, mRates, mRelease, mReviewerName, mReview, mOtherReview;
-    private TextView mDescription;
-    private ImageView mBackdrop, mLikeButton;
-    private ImageButton mVideo1;
+
+    @BindView(R.id.pb_detail_loading) ProgressBar mLoading;
+    @BindView(R.id.tv_movie_title_detail) TextView mTitleAndRelease;
+    @BindView(R.id.tv_rates) TextView mRates;
+    @BindView(R.id.tv_description) TextView mDescription;
+    @BindView(R.id.iv_backdrop) ImageView mBackdrop;
+    @BindView(R.id.tv_release) TextView mRelease;
+    @BindView(R.id.tv_name_reviewer) TextView mReviewerName;
+    @BindView(R.id.tv_content_review) TextView mReview;
+    @BindView(R.id.other_review) TextView mOtherReview;
+    @BindView(R.id.iv_like_button) ImageView mLikeButton;
+    @BindView(R.id.iv_video1) ImageView mVideo1;
+
     private Movies movie;
 
     public static final String[] MOVIE_DETAIL_PROJECTION = {
@@ -57,19 +67,7 @@ public class DetailMovieActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_movie);
 
-        mLoading = (ProgressBar) findViewById(R.id.pb_detail_loading);
-        mTitleAndRelease = (TextView)findViewById(R.id.tv_movie_title_detail);
-        mRates = (TextView)findViewById(R.id.tv_rates);
-        mDescription = (TextView) findViewById(R.id.tv_description);
-        mBackdrop = (ImageView)findViewById(R.id.iv_backdrop);
-        mRelease = (TextView)findViewById(R.id.tv_release);
-        mReviewerName = (TextView)findViewById(R.id.tv_name_reviewer);
-        mReview = (TextView)findViewById(R.id.tv_content_review);
-        mVideo1 = (ImageButton) findViewById(R.id.iv_video1);
-        mLikeButton = (ImageView)findViewById(R.id.iv_like_button);
-        mOtherReview = (TextView)findViewById(R.id.other_review);
-
-
+        ButterKnife.bind(this);
         mDetailMoviePresenter = new DetailMoviePresenter(this);
 
         Intent intentFromParent = getIntent();

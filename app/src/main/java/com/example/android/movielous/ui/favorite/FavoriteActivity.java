@@ -20,14 +20,19 @@ import com.example.android.movielous.R;
 import com.example.android.movielous.data.db.MovieContract;
 import com.example.android.movielous.ui.detailMovie.DetailMovieActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class FavoriteActivity extends AppCompatActivity
         implements FavoriteMovieAdapter.FavoriteAdapterOnClickHandler,
         LoaderManager.LoaderCallbacks<Cursor>{
 
-    private RecyclerView mRecyclerView;
+
+    @BindView(R.id.rv_movie_main) RecyclerView mRecyclerView;
+    @BindView(R.id.pb_loading_fv) ProgressBar mLoadingPB;
+
     private FavoriteMovieAdapter mFavoriteMovieAdapter;
     private int mPosition = RecyclerView.NO_POSITION;
-    private ProgressBar mLoadingPB;
 
     private static final int ID_FAV_MOVIE_LOADER = 24;
 
@@ -56,8 +61,7 @@ public class FavoriteActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_main);
-        mLoadingPB = (ProgressBar) findViewById(R.id.pb_loading_fv);
+        ButterKnife.bind(this);
 
         int noColumn = getNoOfColumn();
         GridLayoutManager layoutManager = new GridLayoutManager(this,noColumn);

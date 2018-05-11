@@ -7,15 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.movielous.data.models.movies.MoviesHeader;
-import com.example.android.movielous.data.models.movies.Movies;
 import com.example.android.movielous.R;
+import com.example.android.movielous.data.models.movies.Movies;
+import com.example.android.movielous.data.models.movies.MoviesHeader;
 import com.example.android.movielous.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by user on 7/9/2017.
@@ -37,13 +40,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieAdapt
     }
 
 public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private final TextView mMovieTitleTV;
-    final ImageView mMoviePosterIV;
+        @BindView(R.id.tv_movie_title) TextView mMovieTitleTV;
+        @BindView(R.id.iv_movie_poster) ImageView mMoviePosterIV;
+
 
     MovieAdapterViewHolder(View view){
         super(view);
-        mMovieTitleTV = (TextView) view.findViewById(R.id.tv_movie_title);
-        mMoviePosterIV = (ImageView)view.findViewById(R.id.iv_movie_poster);
+        ButterKnife.bind(this,view);
         view.setOnClickListener(this);
     }
 
