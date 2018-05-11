@@ -1,6 +1,6 @@
 # Movielous
 
-This was an udacity fastrack project, this has really bad architecture, I am still working on this to get better rchitecture.
+This was an udacity fastrack project.
 
 
 
